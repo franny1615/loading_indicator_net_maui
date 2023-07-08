@@ -5,11 +5,29 @@ using Microsoft.Maui.Controls.Shapes;
 
 namespace LoadingIndicatorSample;
 
+public class StatusIndicatorManager
+{
+	private StatusIndicator Indicator;
+
+	public StatusIndicatorManager()
+	{
+		Indicator = new();
+	}
+
+	public void ShowWithStatus(string status, Page page)
+	{
+		Indicator.ShowWithStatus(status, page);
+	}
+
+	public void Dismiss()
+	{
+		Indicator.Dismiss();
+		Indicator = new();
+	}
+}
+
 public class StatusIndicator : Popup 
 {
-	public static StatusIndicator Instance = new();
-
-	#region Status
 	private Label StatusLabel = new Label
 		{
 			MaxLines = 2,
@@ -17,20 +35,14 @@ public class StatusIndicator : Popup
 		}
 		.TextColor(Colors.White)
         .Font(size: 16, bold: true);
-	#endregion
 
-	#region IsShown
-	public static BindableProperty IsShownProperty = BindableProperty.Create(
-		nameof(IsShownProperty),
-		typeof(bool),
-		typeof(StatusIndicator));
+	private Image LoadingImage = new Image()
+		.CenterVertical()
+		.CenterHorizontal()
+		.Size(50,50)
+		.Source("loading.png");
 
-	public bool IsShown
-	{
-		get => (bool)GetValue(IsShownProperty);
-		set => SetValue(IsShownProperty, value);
-	}
-    #endregion
+	private bool IsShown = false;
 
     public StatusIndicator()
 	{
@@ -51,11 +63,7 @@ public class StatusIndicator : Popup
 				RowSpacing = 8,
 				Children =
 				{
-					new ActivityIndicator
-						{
-							IsRunning = true,
-							Color = Colors.White
-						}
+					LoadingImage 
 						.Row(0),
 					StatusLabel
 						.Row(1)
@@ -68,17 +76,34 @@ public class StatusIndicator : Popup
 
 	public void ShowWithStatus(string status, Page page)
 	{
-		StatusLabel.Text = status;
+        if (string.IsNullOrEmpty(status))
+            StatusLabel.IsVisible = false;
+        else
+            StatusLabel.IsVisible = true;
+
+        StatusLabel.Text = status;
 
 		if (IsShown)
 			return;
 
 		IsShown = true;
+		RotateLoading();
 		page.ShowPopup(this);
+	}
+
+	private async void RotateLoading()
+	{
+		if (!IsShown)
+			return;
+
+		await LoadingImage.RotateTo(360, 1000);
+		LoadingImage.Rotation = 0;
+		RotateLoading();
 	}
 
 	public void Dismiss()
 	{
+		IsShown = false;
 		Close();
 	}
 }

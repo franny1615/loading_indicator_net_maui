@@ -1,8 +1,34 @@
 ﻿# Loading Indicator Sample
 
-By using the MAUI Community Toolkit, styled a basic popup to show messaging.
+Basic Activity Indicator using Community Toolkit Popup
+* Relies on an svg called loading.svg.
+* That svg is rotated 360 degress when indicator is showing.
 
-StatusIndicator object can be used statically to show loading messages on any given page.
-The popup will only ever show once, but messages can be updated on the fly, and will only need to be dismissed once.
+## Adding To Project
+* Drag and drop the StatusIndicator.cs file and adjust namespace.
+* Take loading.svg from this project or creating your own loading wheel. 
+```
+// Add the manager as a service
+... MauiProgram.cs
+builder.Services.AddSingleton<StatusIndicatorManager>();
+...
+... SomePage.cs
+private readonly StatusIndicatorManager _statusIndicatorManager;
 
-The idea is to have a network status indicator app wide that is plug and play.
+public SomePage(StatusIndicatorManager statusIndicatorManager)
+{
+    InitializeComponent();
+    _statusIndicatorManager = statusIndicatorManager;
+}
+...
+```
+## Usage
+```
+// Show/Update a status
+//  this is anything that inherits from Page object
+_statusIndicatorManager.ShowWithStatus("Loading...", this);
+
+// Dimiss a status 
+//  (required when you're done with the status)
+_statusIndicatorManager.Dismiss();
+```

@@ -2,38 +2,53 @@
 
 public partial class MainPage : ContentPage
 {
-	private StatusIndicator StatusIndicator
-		=> StatusIndicator.Instance;
+	private readonly StatusIndicatorManager _statusIndicatorManager;
 
-	public MainPage()
+	public MainPage(StatusIndicatorManager statusIndicatorManager)
 	{
 		InitializeComponent();
+        _statusIndicatorManager = statusIndicatorManager;
 	}
 
 	private void TestStatusIndicator(object sender, EventArgs e)
 	{
-		StatusIndicator.ShowWithStatus("Loading...", this);
+        _statusIndicatorManager.ShowWithStatus("Loading...", this);
 		Task.Run(async () =>
 		{
 			await Task.Delay(1000);
 			MainThread.BeginInvokeOnMainThread(() =>
 			{
-                StatusIndicator.ShowWithStatus("1 Second has passed", this);
-            });
-			await Task.Delay(1000);
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                StatusIndicator.ShowWithStatus("2 Second has passed", this);
+                _statusIndicatorManager.ShowWithStatus("Message Changed", this);
             });
             await Task.Delay(1000);
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                StatusIndicator.ShowWithStatus("3 Second has passed", this);
+                _statusIndicatorManager.ShowWithStatus(null, this);
             });
             await Task.Delay(1000);
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                StatusIndicator.Dismiss();
+                _statusIndicatorManager.ShowWithStatus("", this);
+            });
+            await Task.Delay(1000);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                _statusIndicatorManager.ShowWithStatus("Message Changed Again", this);
+            });
+            await Task.Delay(1000);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                _statusIndicatorManager.Dismiss();
+            });
+            await Task.Delay(1000);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                _statusIndicatorManager.ShowWithStatus("Message Changed Again Again", this);
+            });
+            await Task.Delay(1000);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                _statusIndicatorManager.Dismiss();
             });
         });
 	}

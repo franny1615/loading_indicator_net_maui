@@ -19,6 +19,9 @@ public static class MauiProgram
             .UseMauiCommunityToolkitCore()
             .UseMauiCommunityToolkitMarkup();
 
+        builder.Services.AddSingleton<StatusIndicatorManager>();
+        builder.Services.AddTransient<MainPage>();
+
         return builder.Build();
     }
 }
