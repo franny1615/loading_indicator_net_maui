@@ -19,6 +19,11 @@ public class StatusIndicatorManager
 		Indicator.ShowWithStatus(status, page);
 	}
 
+	public void ShowCompletionWithStatus(string status, Page page)
+	{
+		Indicator.ShowCompletionWithStatus(status, page);
+	}
+
 	public void Dismiss()
 	{
 		Indicator.Dismiss();
@@ -74,7 +79,28 @@ public class StatusIndicator : Popup
 		};
     }
 
-	public void ShowWithStatus(string status, Page page)
+    #region Status Actions
+    public void ShowWithStatus(string status, Page page)
+	{
+		SetStatus(status);
+		ShowOn(page, action: RotateLoading);
+    }
+
+    public void ShowCompletionWithStatus(string status, Page page)
+    {
+        SetStatus(status);
+        ShowOn(page, action: ChangeToCheckMark);
+    }
+
+    public void Dismiss()
+    {
+        IsShown = false;
+        Close();
+    }
+    #endregion 
+
+    #region Helpers
+    private void SetStatus(string status)
 	{
         if (string.IsNullOrEmpty(status))
             StatusLabel.IsVisible = false;
@@ -82,28 +108,35 @@ public class StatusIndicator : Popup
             StatusLabel.IsVisible = true;
 
         StatusLabel.Text = status;
+    }
 
-		if (IsShown)
-			return;
+    private void ShowOn(Page page, Action action)
+	{
+        if (IsShown)
+            return;
 
-		IsShown = true;
-		RotateLoading();
-		page.ShowPopup(this);
-	}
+        IsShown = true;
+		action();
+        page.ShowPopup(this);
+    }
 
-	private async void RotateLoading()
+    private async void RotateLoading()
+    {
+        if (!IsShown)
+            return;
+
+		LoadingImage.Source = "loading.png";
+        await LoadingImage.RotateTo(360, 1000);
+        LoadingImage.Rotation = 0;
+        RotateLoading();
+    }
+
+	private void ChangeToCheckMark()
 	{
 		if (!IsShown)
 			return;
 
-		await LoadingImage.RotateTo(360, 1000);
-		LoadingImage.Rotation = 0;
-		RotateLoading();
+		LoadingImage.Source = "check_circle_outline.png";
 	}
-
-	public void Dismiss()
-	{
-		IsShown = false;
-		Close();
-	}
+    #endregion
 }

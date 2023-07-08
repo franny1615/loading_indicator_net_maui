@@ -3,10 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="LoadingIndicatorSample.MainPage">
     <VerticalStackLayout VerticalOptions="Center">
-            <Button
-                Text="Test Status Indicator"
-                Clicked="TestStatusIndicator"
-                HorizontalOptions="Center" />
+        <Button
+            Text="Test Status Indicator"
+            Clicked="TestStatusIndicator"
+            HorizontalOptions="Center" />
+        <Button
+            Text="Test Completion Status Indicator"
+            Clicked="TestCompletionStatusIndicator"
+            HorizontalOptions="Center" />
     </VerticalStackLayout>
 </ContentPage>
 

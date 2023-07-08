@@ -3,6 +3,7 @@
 Basic Activity Indicator using Community Toolkit Popup
 * Relies on an svg called loading.svg.
 * That svg is rotated 360 degress when indicator is showing.
+* Relies on an svg called check_circle_outline.svg
 
 ## Adding To Project
 * Drag and drop the StatusIndicator.cs file and adjust namespace.
@@ -27,6 +28,9 @@ public SomePage(StatusIndicatorManager statusIndicatorManager)
 // Show/Update a status
 //  this is anything that inherits from Page object
 _statusIndicatorManager.ShowWithStatus("Loading...", this);
+
+// Show Completion status
+_statusIndicatorManager.ShowCompletionWithStatus("Sucess!", this);
 
 // Dimiss a status 
 //  (required when you're done with the status)

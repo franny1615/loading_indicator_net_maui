@@ -61,8 +61,10 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Images\loading.svg" />
+	  <None Remove="Resources\Images\check_circle_outline.svg" />
 	</ItemGroup>
 	<ItemGroup>
 	  <BundleResource Include="Resources\Images\loading.svg" />
+	  <BundleResource Include="Resources\Images\check_circle_outline.svg" />
 	</ItemGroup>
 </Project>
